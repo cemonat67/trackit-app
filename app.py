@@ -11,6 +11,11 @@ CORS(app, resources={r"/*": {"origins": "*"}})  # CORS tüm kaynaklara açık
 
 SECRET_KEY = "supersecret123"  # Gerçek sistemlerde .env dosyasına alınmalı
 
+# 🏥 Health check endpoint
+@app.route('/')
+def health_check():
+    return jsonify({'status': 'healthy', 'message': 'TrackIt API is running'}), 200
+
 # 🔐 Token doğrulayıcı decorator
 def token_required(f):
     @wraps(f)
@@ -111,4 +116,5 @@ def add_co2(current_user):
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
+    print(f"🚀 Starting TrackIt API on port {port}")
     app.run(debug=False, host="0.0.0.0", port=port)
