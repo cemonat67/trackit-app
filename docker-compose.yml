@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: trackit-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=0
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: trackit-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Optional: Add a reverse proxy for SSL/domain handling
+  # nginx-proxy:
+  #   image: nginx:alpine
+  #   ports:
+  #     - "443:443"
+  #   volumes:
+  #     - ./ssl:/etc/nginx/ssl
+  #   depends_on:
+  #     - frontend
